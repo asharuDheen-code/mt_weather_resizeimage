@@ -40,6 +40,7 @@ export default function AuthGuard({ children }) {
   }, []);
 
   console.log("is auth check", isAuthenticate);
+
   if (!isAuthenticate) {
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);

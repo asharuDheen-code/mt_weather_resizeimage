@@ -1,31 +1,35 @@
-import { useEffect } from "react";
-import PropTypes from "prop-types";
-import { Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-//
+import PropTypes from "prop-types";
+import { Navigate, useLocation } from "react-router-dom";
+// import Login from "../pages/Login";
+// import IsAuth from "../contexts/isAuth";
 import api from "../utils/api";
+import { setSession } from "../utils/jwt";
+import SignIn from "../pages/signIn/SignIn";
+import Register from "../pages/register/Register";
 
-// hooks
-// import useAuth from '../hooks/useAuth';
-// routes
-// import { PATH_DASHBOARD } from '../routes/paths';
+// import { isAuthenticates } from '../modules/admin/reducer';
 
-// ----------------------------------------------------------------------
-
-LoginGuard.propTypes = {
+AuthGuard.prototype = {
   children: PropTypes.node,
 };
 
-export default function LoginGuard({ children }) {
-  const { isAuthenticate } = useSelector((state) => state.adminAuth);
-
+export default function AuthGuard({ children }) {
   const dispatch = useDispatch();
+  // IsAuth();
+  // const { isAuthenticated } = IsAuth();
+  const [requestedLocation, setRequestedLocation] = useState(null);
+  const { isAuthenticate } = useSelector((state) => state.adminAuth);
+  const { pathname } = useLocation();
+
   useEffect(() => {
     const initialize = async () => {
       const accessToken = window.localStorage.getItem("accessToken");
       // if (accessToken && isValidToken(accessToken)) {
+      setSession(accessToken);
       if (accessToken) {
-        const response = await api.get('/api/auth/me');
+        const response = await api.get("/auth/me");
         // const { admin } = response.data;
 
         dispatch({
@@ -36,12 +40,18 @@ export default function LoginGuard({ children }) {
     };
     initialize();
   }, []);
-    // const { isAuthenticated } = useAuth();
 
-    console.log("check is auth", isAuthenticate)
+  console.log("is auth check", isAuthenticate);
 
-  if (isAuthenticate) {
-    return <Navigate to="/" />;
+  if (!isAuthenticate) {
+    if (pathname !== requestedLocation) {
+      setRequestedLocation(pathname);
+    }
+    return <Register />;
+  }
+  if (requestedLocation && pathname !== requestedLocation) {
+    setRequestedLocation(null);
+    return <Navigate to={requestedLocation} />;
   }
 
   return <>{children}</>;

@@ -19,12 +19,12 @@ exports.getMe = async (req, res) => {
   //This req.user come from middleware -> auth -> protect
   const admin = await User.findById(req.user.id);
 
-  if (admin.role === "admin") {
-    res.status(200).json({
-      success: true,
-      admin,
-    });
-  }
+  // if (admin.role === "admin") {
+  res.status(200).json({
+    success: true,
+    admin,
+  });
+  // }
 };
 
 // @desc      Register user

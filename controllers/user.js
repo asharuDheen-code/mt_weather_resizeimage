@@ -3,6 +3,7 @@ const { uuid } = require("uuidv4");
 //
 const User = require("../models/User");
 const Image = require("../models/Image");
+const Customer = require("../models/Customer");
 
 // multer
 const DIR = "./public/";
@@ -34,6 +35,89 @@ const upload = multer({
 exports.createUser = async (req, res) => {
   try {
     const response = await User.create(req.body);
+    res.status(200).json({
+      success: true,
+      message: "succefully registered",
+      user: req.body,
+      response,
+    });
+  } catch (err) {
+    res.status(204).json({
+      success: false,
+      message: err,
+    });
+  }
+};
+
+// @desc      add user
+// @route     POST /api/v1/user/delete_customer
+// @access    Protect
+exports.deleteCustomer = async (req, res) => {
+  try {
+    const { customer } = req.query;
+    const response = await Customer.findByIdAndDelete(customer);
+    console.log("req query", response);
+    res.status(200).json({
+      success: true,
+      user: req.body,
+      //   response,
+    });
+  } catch (err) {
+    res.status(204).json({
+      success: false,
+      message: err,
+    });
+  }
+};
+
+// @desc      add user
+// @route     POST /api/v1/user/get_customers
+// @access    Protect
+exports.getCustomers = async (req, res) => {
+  try {
+    const { user } = req.query;
+    const response = await Customer.find({ user: user });
+    console.log("response", response);
+    res.status(200).json({
+      success: true,
+      response,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(204).json({
+      success: false,
+      message: err,
+    });
+  }
+};
+
+// @desc      add user
+// @route     POST /api/v1/user/get_customers
+// @access    Protect
+exports.getAllCustomers = async (req, res) => {
+  try {
+    const { user } = req.query;
+    const response = await Customer.find();
+    console.log("response", response);
+    res.status(200).json({
+      success: true,
+      response,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(204).json({
+      success: false,
+      message: err,
+    });
+  }
+};
+
+// @desc      add user
+// @route     POST /api/v1/user/add_user
+// @access    Protect
+exports.addUser = async (req, res) => {
+  try {
+    const response = await Customer.create(req.body);
     res.status(200).json({
       success: true,
       message: "succefully registered",

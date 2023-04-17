@@ -8,7 +8,7 @@ export const loadAdmin = () => async (dispatch) => {
 
     dispatch({
       type: "ADMIN_LOADED",
-      payload: response.data,
+      payload: response.data.admin,
     });
   } catch (error) {
     dispatch({
@@ -23,9 +23,16 @@ export const login = (data) => async (dispatch) => {
     const response = await api.post("/auth/login", data);
     const { admin, message, success, user } = response.data;
 
+    console.log("login user data", response.data);
+
     if (success) {
       const { token } = response.data;
       setSession(token);
+
+      dispatch({
+        type: "USER",
+        payload: user,
+      });
 
       dispatch({
         type: "ADMIN_LOGIN",

@@ -9,6 +9,7 @@ import AuthGuard from "../guards/AuthGuard";
 import LoginGuard from "../guards/LoginGuard";
 import SignInSide from "../pages/signIn/SignIn2";
 import ImageReSizer from "../pages/Image/ImageReSizer";
+import Home from "../pages/LandingPage/Home";
 
 // ----------------------------------------------------------------------
 
@@ -16,6 +17,14 @@ import ImageReSizer from "../pages/Image/ImageReSizer";
 
 export default function Router() {
   return useRoutes([
+    {
+      path: "/home",
+      element: (
+        <AuthGuard>
+          <Home />
+        </AuthGuard>
+      ),
+    },
     {
       path: "/weather",
       element: (
@@ -55,7 +64,7 @@ export default function Router() {
         { path: "register-unprotected", element: <Register /> },
       ],
     },
-    { path: "/", element: <Navigate to="/weather" replace /> },
+    { path: "/", element: <Navigate to="/home" replace /> },
     { path: "*", element: <h1>Not Found</h1> },
   ]);
 }

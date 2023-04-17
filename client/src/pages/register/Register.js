@@ -15,6 +15,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //utils
 import api from "../../utils/api";
@@ -39,7 +40,7 @@ export default function SignUp() {
     };
     const resp = await api.post(`user/create_user`, datas);
     console.log("respoo", resp);
-    navigate("/auth/login");
+    navigate("/");
     if (resp.data.success) {
       toast.success("Register successfully", {
         position: "top-right",
@@ -58,6 +59,7 @@ export default function SignUp() {
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+        <ToastContainer />
         <Box
           sx={{
             marginTop: 8,
@@ -112,7 +114,6 @@ export default function SignUp() {
                   >
                     <MenuItem value="customer">Customer</MenuItem>
                     <MenuItem value="vendor">Vendor</MenuItem>
-                    <MenuItem value="accountant">Accountant</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
