@@ -1,10 +1,17 @@
-import { ADMIN_LOADED, ADMIN_LOGIN, ADMIN_LOGOUT, WRONG_CREDENTIALS } from './constants';
+import {
+  ADMIN_LOADED,
+  ADMIN_LOGIN,
+  ADMIN_LOGOUT,
+  GET_IMAGES,
+  WRONG_CREDENTIALS,
+} from "./constants";
 
 const initialState = {
-  token: localStorage.getItem('accessToken'),
+  token: localStorage.getItem("accessToken"),
   isAuthenticate: false,
   admin: [],
-  wronCredentials: true
+  wronCredentials: true,
+  images: [],
 };
 
 export default function adminAuth(state = initialState, action) {
@@ -15,7 +22,7 @@ export default function adminAuth(state = initialState, action) {
       return {
         ...state,
         isAuthenticate: true,
-        admin: payload
+        admin: payload,
       };
 
     case ADMIN_LOGIN:
@@ -23,21 +30,28 @@ export default function adminAuth(state = initialState, action) {
         ...state,
         isAuthenticate: true,
         admin: payload,
-        token: payload.token
+        token: payload.token,
       };
 
     case WRONG_CREDENTIALS:
       return {
         ...state,
-        wronCredentials: payload.success
+        wronCredentials: payload.success,
       };
 
     case ADMIN_LOGOUT:
       return {
         ...state,
         isAuthenticate: false,
-        token: null
+        token: null,
       };
+
+    case GET_IMAGES:
+      return {
+        ...state,
+        images: payload,
+      };
+
     default:
       return state;
   }

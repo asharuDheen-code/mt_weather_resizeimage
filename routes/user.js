@@ -6,6 +6,7 @@ const {
   getCustomers,
   getAllCustomers,
   deleteCustomer,
+  getImage,
 } = require("../controllers/user");
 
 // const upload = multer({ dest: "uploads/" });
@@ -15,6 +16,7 @@ const {
 router.post("/create_user", createUser);
 router.post("/add_user", addUser);
 router.post("/addimage", addImage);
+router.get("/getimage", getImage);
 router.get("/get_customers", getCustomers);
 router.get("/get_all_customers", getAllCustomers);
 router.delete("/delete_customer", deleteCustomer);

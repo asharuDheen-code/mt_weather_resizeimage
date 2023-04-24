@@ -1,9 +1,21 @@
-import { Button, Stack, TextField } from "@mui/material";
-import React, { Component, useState } from "react";
+import {
+  Button,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Grid,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { Component, useEffect, useState } from "react";
 import Resizer from "react-image-file-resizer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 //
-import { uploadImage } from "../../modules/image/actions";
+import { getImages, uploadImage } from "../../modules/image/actions";
 
 function ImageReSizer() {
   const dispatch = useDispatch();
@@ -13,7 +25,25 @@ function ImageReSizer() {
   const [imgHight, setImgHight] = useState();
   const [imgWidth, setImgWidth] = useState();
 
-  console.log("new image", newImage);
+  const { images } = useSelector((state) => state.image);
+
+  useEffect(() => {
+    dispatch(getImages());
+  }, []);
+
+  const copyUrl = (url) => {
+    navigator.clipboard.writeText(url);
+    toast.success("image url copied", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
 
   const clearFields = () => {
     setImgHight("");
@@ -21,8 +51,11 @@ function ImageReSizer() {
     setNewImage("");
   };
 
-  const submitImage = () => {
-    dispatch(uploadImage({ editImage, image, newImage }));
+  const submitImage = async () => {
+    const resp = await dispatch(uploadImage({ editImage, image, newImage }));
+    setEditImage("");
+    setImage("");
+    setNewImage("");
   };
 
   const onImageChange = (event) => {
@@ -59,7 +92,8 @@ function ImageReSizer() {
   };
   return (
     <div>
-      <Stack sx={{ alignItems: "center" }}>
+      <ToastContainer />
+      {/* <Stack sx={{ alignItems: "center" }}>
         <TextField
           margin="normal"
           required
@@ -104,7 +138,7 @@ function ImageReSizer() {
         />
       </Stack>
       <Stack direction="row" sx={{ justifyContent: "center" }} spacing={1}>
-        {/* <Button
+        <Button
           type="submit"
           // fullWidth
           variant="contained"
@@ -112,7 +146,7 @@ function ImageReSizer() {
           // onClick={submitImage}
         >
           Submit
-        </Button> */}
+        </Button>
         <Button
           type="submit"
           // fullWidth
@@ -123,26 +157,46 @@ function ImageReSizer() {
         >
           Clear
         </Button>
+      </Stack> */}
+      <Stack sx={{ alignItems: "center", m: 2 }}>
+        <input
+          type="file"
+          accept="image/*"
+          // style={{ display: "none" }}
+          // maxSize={1000}
+          id="contained-button-file"
+          onChange={onImageChange}
+          // width="1500"
+          // height="800"
+        />
+        <Button
+          type="submit"
+          // fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          onClick={submitImage}
+        >
+          Submit
+        </Button>
       </Stack>
-      {/* <input
-        type="file"
-        accept="image/*"
-        // style={{ display: "none" }}
-        // maxSize={1000}
-        id="contained-button-file"
-        onChange={onImageChange}
-        // width="1500"
-        // height="800"
-      />
-      <Button
-        type="submit"
-        // fullWidth
-        variant="contained"
-        sx={{ mt: 3, mb: 2 }}
-        onClick={submitImage}
-      >
-        Submit
-      </Button> */}
+      <Grid container spacing={2} sx={{ m: 2 }}>
+        {images &&
+          images?.map((val, ind) => (
+            <Grid item>
+              <Card sx={{ maxWidth: 345 }} key={ind}>
+                <CardActionArea>
+                  <CardMedia
+                    onClick={() => copyUrl(val.image)}
+                    component="img"
+                    height="140"
+                    image={val?.image}
+                    alt={val?.name}
+                  />
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ))}
+      </Grid>
     </div>
   );
 }

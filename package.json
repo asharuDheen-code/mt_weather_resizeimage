@@ -12,6 +12,7 @@
     "nodemon": "^2.0.21",
     "react-image-file-resizer": "^0.4.8",
     "sharp": "^0.32.0",
+    "uniqid": "^5.4.0",
     "uuidv4": "^6.2.13"
   },
   "scripts": {

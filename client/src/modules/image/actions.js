@@ -16,7 +16,20 @@ export const uploadImage = (editImages) => async (dispatch) => {
     dispatch({
       type: "ADD_BANNER",
     });
-    // dispatch(getAllBrands());
+    dispatch(getImages());
+  } catch (error) {
+    console.log("");
+  }
+};
+
+export const getImages = (editImages) => async (dispatch) => {
+  try {
+    const { data } = await api.get("user/getimage");
+    dispatch({
+      type: "GET_IMAGES",
+      payload: data?.response,
+    });
+    return data?.success;
   } catch (error) {
     console.log("");
   }

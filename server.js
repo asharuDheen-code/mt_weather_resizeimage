@@ -11,16 +11,18 @@ const app = express();
 //cors policy
 app.use(
   cors({
-    origin: "*", 
+    origin: "*",
   })
 );
 
 // Connect to database
 connectDB();
 
+app.use("/images", express.static("public"));
+
 // middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
 
 // route files
 const auth = require("./routes/auth");
